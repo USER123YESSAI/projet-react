@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Header from './components/Header'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -13,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/logement" element={<Logement />} />
+        <Route path="/logement/:id" element={<Logement />} />
       </Routes>
     </div>
 
