@@ -1,11 +1,24 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Collapse from "../components/Collapse.jsx";
 import aboutHero from "../assets/assets/image_apropos.png";
-import aboutData from "../../a-propos.json";
-
-
 
 const About = () => {
+  const [aboutData, setAboutData] = useState([]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/a-propos.json");
+        const data = await res.json();
+        setAboutData(data);
+      } catch (e) {
+        console.error("Erreur chargement /a-propos.json", e);
+      }
+    };
+
+    load();
+  }, []);
+
   return (
     <main className="main-about">
       <div className="banner">
@@ -50,7 +63,12 @@ const About = () => {
       <div className="collapse-about">
         <div className="collapse-group">
           {aboutData.map((item, index) => (
-<Collapse key={index} title={item.title} content={item.content} className="small-collapse" />
+            <Collapse
+              key={index}
+              title={item.title}
+              content={item.content}
+              className="small-collapse"
+            />
           ))}
         </div>
       </div>
@@ -59,3 +77,4 @@ const About = () => {
 };
 
 export default About;
+

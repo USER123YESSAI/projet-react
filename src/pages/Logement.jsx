@@ -1,11 +1,41 @@
-import { useParams } from "react-router-dom";
-import logements from "../data/logements.json";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Slideshow from "../components/Slideshow.jsx";
 import LogementDetails from "../components/LogementDetails.jsx";
 
 const Logement = () => {
   const { id } = useParams();
-  const logement = logements.find((l) => l.id === id);
+  const navigate = useNavigate();
+
+  const [logement, setLogement] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/logements.json");
+        const data = await res.json();
+        const found = data.find((l) => l.id === id);
+
+        if (found) {
+          setLogement(found);
+        } else {
+          navigate("/", { replace: true });
+        }
+      } catch (e) {
+        console.error("Erreur chargement logement", e);
+        navigate("/", { replace: true });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, [id, navigate]);
+
+  if (loading) {
+    return <div className="logement-page">Chargement...</div>;
+  }
 
   if (!logement) {
     return (
@@ -32,3 +62,4 @@ const Logement = () => {
 };
 
 export default Logement;
+
